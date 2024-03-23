@@ -123,6 +123,10 @@ Markdown のプレビューを拡張するための拡張機能です。Markdown
 
 Visual Studio Code を開いて、左側のアイコンから拡張機能を検索し、Markdown Preview Enhanced をインストールしてください。
 
+Markdown Preview Enhanced をインストールすると、Markdown ドキュメントを右クリックして、`Markdown Preview Enhanced: Open Preview to the Side` を選択することで、プレビュー画面を表示することができます。
+
+また、PDF などの形式でエクスポートすることもできます。
+
 ## 5. Paste Image
 
 ![Paste Image](./images/vscodeで快適にmarkdownドキュメントを作成する/PasteImage.png)
