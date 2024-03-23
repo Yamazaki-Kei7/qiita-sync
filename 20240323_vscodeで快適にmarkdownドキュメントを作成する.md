@@ -1,8 +1,10 @@
 <!--
 title:   痒いところに手が届く！VSCode で快適に Markdown ドキュメントを作成する方法
 tags:    Markdown,VSCode
+id:      57f41316654df41961e4
 private: false
 -->
+
 ![デスクトップコンピュータのイラスト](images/20240323_vscodeで快適にmarkdownドキュメントを作成する/デスクトップコンピュータのイラスト.png)
 
 # はじめに
