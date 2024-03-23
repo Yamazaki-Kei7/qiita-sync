@@ -4,7 +4,6 @@ tags:    Markdown,VSCode
 id:      1fe7c45c2f1f2aa666bc
 private: true
 -->
-
 # はじめに
 
 転職してもうすぐ 1 年が経とうとしています。転職前はドキュメントの作成が Word 一択でしたが、転職後は Markdown を使う機会が非常に増えました。
@@ -46,7 +45,7 @@ Markdown を使い始めた頃は、編集のしづらさ感じ、利用する�
 
 ## 1. Visual Studio Code
 
-![Visual Studio Code](./images/vscodeで快適にmarkdownドキュメントを作成する/VisualStudioCode.png)
+![Visual Studio Code](images/vscodeで快適にmarkdownドキュメントを作成する/VisualStudioCode.png)
 
 言わずと知れた、マイクロソフト製のテキストエディタです。拡張機能が豊富で、Markdown の編集にも非常に適しています。
 
@@ -55,7 +54,7 @@ Markdown を使い始めた頃は、編集のしづらさ感じ、利用する�
 
 ## 2. Typora
 
-![Typora](./images/vscodeで快適にmarkdownドキュメントを作成する/Typora.png)
+![Typora](images/vscodeで快適にmarkdownドキュメントを作成する/Typora.png)
 
 Visual Studio Code で Markdown を編集するときに、Live Preview ができると非常に便利です。Typora は、Markdown ファイルをリアルタイムでプレビューすることができる拡張機能です。
 また、Visual Studio Code とは別に、有料版のテキストエディタとしても提供されています。
@@ -63,7 +62,7 @@ Visual Studio Code で Markdown を編集するときに、Live Preview がで�
 Visual Studio Code を開いて、左側のアイコンから拡張機能を検索し、Typora をインストールしてください。
 Typora がインストールされていると、Visual Studio Code で Markdown ファイルを開いたときに、以下の画面が開き、プレビュー状態で編集が可能になります。
 
-![Typora Preview](./images/vscodeで快適にmarkdownドキュメントを作成する/TyporaPreview.png)
+![Typora Preview](images/vscodeで快適にmarkdownドキュメントを作成する/TyporaPreview.png)
 
 上部のアイコンをクリックすることで、Visual Studio Code のエディタとプレビュー画面を切り替えることができます。
 箇条書きやチェックリスト、表などの要素を追加すると、プレビュー画面にリアルタイムで反映されるので、編集が非常に楽になります。
@@ -83,11 +82,11 @@ Typora がインストールされていると、Visual Studio Code で Markdown
 | a   | b   | c   |
 | d   | e   | f   |
 
-![Typora Table](./images/vscodeで快適にmarkdownドキュメントを作成する/TyporaTable.png)
+![Typora Table](images/vscodeで快適にmarkdownドキュメントを作成する/TyporaTable.png)
 
 ## 3. Markdown All in One
 
-![Markdown All in One](./images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownAllInOne.png)
+![Markdown All in One](images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownAllInOne.png)
 
 Markdown の編集を快適にするための拡張機能です。Markdown の記法を補完してくれる機能が非常に便利です。その機能の 1 つとして、見出し番号を自動で振ることができます。
 
@@ -95,7 +94,7 @@ Visual Studio Code を開いて、左側のアイコンから拡張機能を検�
 
 見出し番号を自動で振るには、`Command + Shift + P` を押して、`Markdown All in One: Add/Update section numbers` を選択してください。
 
-![Markdown All in One: Update/Remove Heading Number](./images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownAllInOneUpdateRemoveHeadingNumber.png)
+![Markdown All in One: Update/Remove Heading Number](images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownAllInOneUpdateRemoveHeadingNumber.png)
 
 ```markdown
 # 見出し 1
@@ -117,7 +116,7 @@ Visual Studio Code を開いて、左側のアイコンから拡張機能を検�
 
 ## 4. Markdown Preview Enhanced
 
-![Markdown Preview Enhanced](./images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownPreviewEnhanced.png)
+![Markdown Preview Enhanced](images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownPreviewEnhanced.png)
 
 Markdown のプレビューを拡張するための拡張機能です。Markdown のプレビューをリアルタイムで表示することができます。
 
@@ -129,7 +128,7 @@ Markdown Preview Enhanced をインストールすると、Markdown ドキュメ
 
 ## 5. Paste Image
 
-![Paste Image](./images/vscodeで快適にmarkdownドキュメントを作成する/PasteImage.png)
+![Paste Image](images/vscodeで快適にmarkdownドキュメントを作成する/PasteImage.png)
 
 Markdown ドキュメントに画像を挿入するときに、画像を貼り付けるだけで画像の挿入ができる拡張機能です。
 ただ、Paste Image に関しては、Visual Studio Code v1.79 で、拡張機能を使わずに Markdown に画像を貼り付ける機能が実装されたので、不要の拡張機能となりました。
@@ -148,7 +147,7 @@ Visual Studio Code v1.79 以降を使用している場合は、キャプチャ�
 
 ## 6. Luna Paint - Image Editor
 
-![Luna Paint - Image Editor](./images/vscodeで快適にmarkdownドキュメントを作成する/LunaPaint-ImageEditor.png)
+![Luna Paint - Image Editor](images/vscodeで快適にmarkdownドキュメントを作成する/LunaPaint-ImageEditor.png)
 
 Markdown ドキュメントに画像を挿入するときに、画像の編集が必要な場合があります。Luna Paint - Image Editor は、画像の編集ができる拡張機能です。
 
@@ -162,11 +161,11 @@ Luna Paint - Image Editor をインストールすると、以下の手順で画
 
 テキストを追加したり、図形を追加したり、画像のリサイズやトリミングなどができます。
 
-![Luna Paint - Edit Image](./images/vscodeで快適にmarkdownドキュメントを作成する/LunaPaint.png)
+![Luna Paint - Edit Image](images/vscodeで快適にmarkdownドキュメントを作成する/LunaPaint.png)
 
 ## 7. Draw.io Integration
 
-![Draw.io Integration](./images/vscodeで快適にmarkdownドキュメントを作成する/Draw.ioIntegration.png)
+![Draw.io Integration](images/vscodeで快適にmarkdownドキュメントを作成する/Draw.ioIntegration.png)
 
 Draw.io は、図を作成するためのツールです。
 そして、Draw.io Integration は、Visual Studio Code で Draw.io を利用するための拡張機能です。
@@ -180,7 +179,7 @@ Draw.io Integration をインストールすると、以下の手順で図を作
 3. 編集したファイルのパスを Markdown ドキュメントに記述
 
 下図のように、Draw.io 作図します。
-![Draw.io](./images/vscodeで快適にmarkdownドキュメントを作成する/Drawio.png)
+![Draw.io](images/vscodeで快適にmarkdownドキュメントを作成する/Drawio.png)
 
 <br>
 
@@ -195,7 +194,7 @@ Draw.io Integration をインストールすると、以下の手順で図を作
 <br>
 
 そうすることで、以下のような図が Markdown ドキュメントに挿入されます。
-![Draw.io](./images/vscodeで快適にmarkdownドキュメントを作成する/hogehoge.drawio.svg)
+![Draw.io](images/vscodeで快適にmarkdownドキュメントを作成する/hogehoge.drawio.svg)
 
 <br>
 
@@ -212,7 +211,7 @@ Draw.io Integration をインストールすると、以下の手順で図を作
 4. 画像を保存
 5. 作成したファイルのパスを Markdown ドキュメントに記述
 
-![Draw.io](./images/vscodeで快適にmarkdownドキュメントを作成する/hogehoge.drawio.png)
+![Draw.io](images/vscodeで快適にmarkdownドキュメントを作成する/hogehoge.drawio.png)
 
 # まとめ
 
