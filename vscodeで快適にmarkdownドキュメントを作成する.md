@@ -1,8 +1,10 @@
 <!--
 title:   痒いところに手が届く！VSCode で快適に Markdown ドキュメントを作成する方法
-tags:    markdown,VSCode
+tags:    Markdown,VSCode
+id:      1fe7c45c2f1f2aa666bc
 private: true
 -->
+
 
 # はじめに
 
