@@ -4,8 +4,7 @@ tags:    Markdown,VSCode
 id:      1fe7c45c2f1f2aa666bc
 private: false
 -->
-
-![デスクトップコンピュータのイラスト](./images/20240323_vscodeで快適にmarkdownドキュメントを作成する/デスクトップコンピュータのイラスト.png)
+![デスクトップコンピュータのイラスト](images/20240323_vscodeで快適にmarkdownドキュメントを作成する/デスクトップコンピュータのイラスト.png)
 
 # はじめに
 
