@@ -5,7 +5,6 @@ id:      1fe7c45c2f1f2aa666bc
 private: true
 -->
 
-
 # はじめに
 
 転職してもうすぐ 1 年が経とうとしています。転職前はドキュメントの作成が Word 一択でしたが、転職後は Markdown を使う機会が非常に増えました。
@@ -48,6 +47,8 @@ Markdown を使い始めた頃は、編集のしづらさ感じ、利用する�
 ## 1. Visual Studio Code
 
 <img src="./images/vscodeで快適にmarkdownドキュメントを作成する/VisualStudioCode.png" alt="Visual Studio Code" width="400"/>
+
+![Visual Studio Code](./images/vscodeで快適にmarkdownドキュメントを作成する/VisualStudioCode.png)
 
 言わずと知れた、マイクロソフト製のテキストエディタです。拡張機能が豊富で、Markdown の編集にも非常に適しています。
 
