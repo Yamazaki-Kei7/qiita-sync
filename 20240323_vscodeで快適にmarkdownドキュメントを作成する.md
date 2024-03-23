@@ -4,6 +4,7 @@ tags:    Markdown,VSCode
 id:      1fe7c45c2f1f2aa666bc
 private: true
 -->
+
 # はじめに
 
 転職してもうすぐ 1 年が経とうとしています。転職前はドキュメントの作成が Word 一択でしたが、転職後は Markdown を使う機会が非常に増えました。
@@ -68,19 +69,8 @@ Typora がインストールされていると、Visual Studio Code で Markdown
 箇条書きやチェックリスト、表などの要素を追加すると、プレビュー画面にリアルタイムで反映されるので、編集が非常に楽になります。
 
 特に表形式の編集が非常に楽になります。Typora で表を作成すると、以下のように見やすい表に変換されます。
-列や行の追加がアイコンをクリックするだけでできるので、非常に便利です。
-
-```markdown
-| 1   | 2   | 3   |
-| --- | --- | --- |
-| a   | b   | c   |
-| d   | e   | f   |
-```
-
-| 1   | 2   | 3   |
-| --- | --- | --- |
-| a   | b   | c   |
-| d   | e   | f   |
+もちらん、プレビュー画面で表を編集することが可能です。
+列や行の追加がアイコンをクリックするだけでできるのも、非常に便利です。
 
 ![Typora Table](images/vscodeで快適にmarkdownドキュメントを作成する/TyporaTable.png)
 
@@ -96,6 +86,8 @@ Visual Studio Code を開いて、左側のアイコンから拡張機能を検�
 
 ![Markdown All in One: Update/Remove Heading Number](images/vscodeで快適にmarkdownドキュメントを作成する/MarkdownAllInOneUpdateRemoveHeadingNumber.png)
 
+以下のように、見出しを設定し、`Markdown All in One: Add/Update section numbers`を選択すると・・。
+
 ```markdown
 # 見出し 1
 
@@ -104,7 +96,7 @@ Visual Studio Code を開いて、左側のアイコンから拡張機能を検�
 ### 見出し 3
 ```
 
-上記のように見出しを記述すると、見出し番号が自動で振られます。
+以下のように、見出し番号が自動で振られます。
 
 ```markdown
 # 1. 見出し 1
@@ -144,6 +136,8 @@ Visual Studio Code v1.79 以降を使用している場合は、キャプチャ�
     "/**/*": "images/${documentBaseName}/"
   },
 ```
+
+これにより、画像を Markdown ドキュメントに貼り付けると、Markdown ファイルから相対パスでフォルダ`images/ドキュメント名/`に画像が保存されます。
 
 ## 6. Luna Paint - Image Editor
 
@@ -201,11 +195,11 @@ Draw.io Integration をインストールすると、以下の手順で図を作
 図の修正が必要になれば、`*.drawio.svg` ファイルを編集することで、自動で Markdown ドキュメントに反映されます。
 
 また、`*.drawio.png`というファイルを作成することで、PNG 形式の画像を作成することもできます。
-これで、画像に加筆を行うことが容易になります。個人的には、Lua Paint よりも Draw.io の方が使いやすいです。
+個人的には、Lua Paint よりも Draw.io を使用したほうが画像の加工がし易いです。
 
-下の画像は以下の手順で作成しました。
+ちなみに、下の画像は以下の手順で作成しました。
 
-1. `hogehoge.drawio.png` というファイルを作成
+1. `hogehoge.drawio.png` というファイルを新規作成
 2. 作成したファイルを開き、コピーした画像を貼り付け
 3. 吹き出し図を挿入し、テキストを追加
 4. 画像を保存
