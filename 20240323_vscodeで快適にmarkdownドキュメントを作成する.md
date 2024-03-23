@@ -182,14 +182,22 @@ Draw.io Integration をインストールすると、以下の手順で図を作
 下図のように、Draw.io 作図します。
 ![Draw.io](./images/vscodeで快適にmarkdownドキュメントを作成する/Drawio.png)
 
+<br>
+
 編集したファイルのパスを Markdown ドキュメントに記述します。
+
+<br>
 
 ```markdown
 <img src="./images/vscodeで快適にmarkdownドキュメントを作成する/hogehoge.drawio.svg" alt="Draw.io" width="400"/>
 ```
 
+<br>
+
 そうすることで、以下のような図が Markdown ドキュメントに挿入されます。
 ![Draw.io](./images/vscodeで快適にmarkdownドキュメントを作成する/hogehoge.drawio.svg)
+
+<br>
 
 図の修正が必要になれば、`*.drawio.svg` ファイルを編集することで、自動で Markdown ドキュメントに反映されます。
 
