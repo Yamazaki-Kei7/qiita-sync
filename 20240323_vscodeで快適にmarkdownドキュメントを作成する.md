@@ -3,8 +3,7 @@ title:   痒いところに手が届く！VSCode で快適に Markdown ドキュ
 tags:    Markdown,VSCode
 private: false
 -->
-
-![デスクトップコンピュータのイラスト](./images/20240323_vscodeで快適にmarkdownドキュメントを作成する/デスクトップコンピュータのイラスト.png)
+![デスクトップコンピュータのイラスト](images/20240323_vscodeで快適にmarkdownドキュメントを作成する/デスクトップコンピュータのイラスト.png)
 
 # はじめに
 
