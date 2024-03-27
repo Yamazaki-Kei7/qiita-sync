@@ -139,7 +139,7 @@ Visual Studio Code v1.79 以降を使用している場合は、キャプチャ�
   },
 ```
 
-これにより、画像を Markdown ドキュメントに貼り付けると、Markdown ファイルから相対パスでフォルダ`images/ドキュメント名/`に画像が保存されます。
+これにより、画像を Markdown ドキュメントに貼り付けると、Markdown ファイルから相対パスでフォルダ `images/ドキュメント名/`に画像が保存されます。
 
 ## 6. Luna Paint - Image Editor
 
@@ -174,7 +174,7 @@ Draw.io Integration をインストールすると、以下の手順で図を作
 2. 作成したファイルを開き、編集する。
 3. 編集したファイルのパスを Markdown ドキュメントに記述
 
-下図のように、Draw.io 作図します。
+下図のように、Draw.io で作図します。
 ![Draw.io](images/vscodeで快適にmarkdownドキュメントを作成する/Drawio.png)
 
 <br>
