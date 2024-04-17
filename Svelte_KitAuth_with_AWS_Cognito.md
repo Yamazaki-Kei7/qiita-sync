@@ -1,0 +1,358 @@
+## SvelteKitアプリの構築
+
+新しいSvelteKitプロジェクトを作成し、AWS Cognito認証を追加してみましょう。カスタム認証情報を使用してAWS Cognito認証を追加し、内部レイアウトまでサーバ側とクライアント側の両方で認証トークンとセッションデータを取得します。
+
+まず、TypeScriptを使用して公式ガイドを使用して新しいSvelteKitプロジェクトをscaffoldしてみましょう：
+
+```
+npm create svelte@latest skauth-congito-demo
+```
+
+これでベアメタルのSvelteKitが手に入る。
+
+次に、最新バージョンのSvelteKit Authをプロジェクトに追加します：
+
+```
+npm install @auth/sveltekit@latest @auth/core@latest
+```
+
+## AWS Cognito setup
+
+認証にはAWS Cognitoを使用します。新しい AWS Cognito ユーザープールとアプリクライアントをセットアップする必要があります。AWS Cognitoユーザープールのセットアップは、こちらの公式ガイドを参考にしてください。`COGNITO_USER_POOL_ID`と`COGNITO_CLIENT_ID`を取得したら、実装を進めます。
+
+AWS Cognitoユーザープールとアプリクライアントの準備ができたので、SvelteKitプロジェクトにカスタム認証認証を追加します。まず、AWS Cognito SDKをプロジェクトに追加します：
+
+```
+pnpm install amazon-cognito-identity-js
+```
+
+プロジェクトに以下の環境変数を追加します。これらの環境変数を使用して、ユーザー・プールIDとアプリ・クライアントIDを取得する：
+
+```
+# .env
+COGNITO_USER_POOL_ID=ap-northeast-1_c570OAYMi
+COGNITO_CLIENT_ID=59ar0hvmekf7u9vit16ou73mj3
+```
+
+## AWS Cognitoの実装
+
+domain driven architectureで作業するため、すべての認証関連モジュールを`src/lib/domain/auth`ディレクトリに置いておく。
+
+新しいファイル`src/lib/domain/auth/services/Cognito.ts`を作成し、以下のコードを追加します：
+
+```
+/**
+ * @file Cognito.ts
+ * File containing the Cognito service
+ */
+import { COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID } from "$env/static/private";
+import { AuthenticationDetails, CognitoRefreshToken, CognitoUser, CognitoUserPool, CognitoUserSession } from "amazon-cognito-identity-js";
+export type CognitoUserSessionType = CognitoUserSession;
+const CONFIGS = {
+  UserPoolId: COGNITO_USER_POOL_ID,
+  ClientId: COGNITO_CLIENT_ID,
+};
+// Create a new Cognito User Pool
+const Pool = new CognitoUserPool(CONFIGS);
+// Wrapper function to create a new Cognito User from the User Pool
+const User = (Username: string): CognitoUser => new CognitoUser({ Username, Pool });
+/**
+ * Login to Cognito User Pool using the provided credentials.
+ * This will return the session data at the time of login.
+ *
+ * @param Username - Email address of the user to login
+ * @param Password - Password of the user to login
+ * @returns - Promise with the result of the login
+ */
+export const getSession = (Username: string, Password: string): Promise<CognitoUserSession> => {
+  return new Promise((resolve, reject) =>
+    User(Username).authenticateUser(new AuthenticationDetails({ Username, Password }), {
+      onSuccess: resolve,
+      onFailure: reject,
+    })
+  );
+};
+/**
+ * Refresh the access token of the provided user.
+ * We will use this method to refresh the access token from our axios interceptor
+ *
+ * @param sessionData - Session data of the user with the refresh token
+ * @returns - Promise with the new user object with tokens and expiration date
+ */
+export const refreshAccessToken = async (sessionData: { refreshToken: string }): Promise<CognitoUserSession> => {
+  const cognitoUser = Pool.getCurrentUser();
+  // Check if the user is logged in
+  if (!cognitoUser) {
+    throw new Error("No user found");
+  }
+  // Refresh the session
+  const RefreshToken = new CognitoRefreshToken({
+    RefreshToken: sessionData.refreshToken,
+  });
+  return new Promise<CognitoUserSession>((resolve) => {
+    cognitoUser.refreshSession(RefreshToken, (_resp, session: CognitoUserSession) => {
+      resolve(session);
+    });
+  });
+};
+```
+
+このファイルは、AWS Cognitoユーザープールにログインし、アクセストークンをリフレッシュするために必要なすべてのメソッドを実装しています。このファイルは SvelteKit Auth モジュールで使用します。
+
+## カスタム認証情報の追加
+
+SvelteKit Authは、SvelteKitが提供するサーバーサイドフックを利用して認証機能を実装します。今回のアプリでは、`src/hooks.server.ts`をカスタマイズして作成します。
+
+こんな感じになります。少し複雑に見えるかもしれませんが、各ステップを詳しく説明していきます：
+
+```
+/**
+ * @file src/hooks.service.ts
+ * File containing the hooks service
+ */
+// Import the SvelteKit Auth module
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Credentials from "@auth/core/providers/credentials"
+// Import the Cognito service that we created earlier
+import { getSession, refreshAccessToken, type CognitoUserSessionType } from "$lib/domains/auth/services/Cognito"
+// Type of the user object returned from the Cognito service
+import type AuthUser from "$lib/domains/auth/types/AuthUser";
+// Import the secret key from the environment variables
+import { AUTH_SECRET } from "$env/static/private";
+interface AuthToken {
+  accessToken: string;
+  accessTokenExpires: number;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+/**
+ * Extract the user object from the session data. This is a helper function that we will use to extract the user object from the session data returned from the Cognito service.
+ */
+const extractUserFromSession = (session: CognitoUserSessionType): AuthUser => {
+  if (!session?.isValid?.()) throw new Error('Invalid session');
+  const user = session.getIdToken().payload;
+  return {
+    id: user.sub,
+    name: `${user.name} ${user.family_name}`,
+    email: user.email,
+    image: user.picture,
+    accessToken: session.getAccessToken().getJwtToken(),
+    accessTokenExpires: session.getAccessToken().getExpiration(),
+    refreshToken: session.getRefreshToken().getToken(),
+  }
+}
+/**
+ * Create the token object from the user object. This is a helper function that we will use to create the token object from the user object returned from the Cognito service.
+ */
+const createTokenFromUser = (user: AuthUser): AuthToken => {
+  return {
+    accessToken: user.accessToken,
+    accessTokenExpires: user.accessTokenExpires,
+    refreshToken: user.refreshToken,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+    },
+  }
+}
+export const handle = SvelteKitAuth({
+  secret: AUTH_SECRET,
+  providers: [
+    Credentials({
+      type: 'credentials',
+      id: 'credentials',
+      name: 'Cognito',
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "test@test.com" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials) return null
+        try {
+          const response = await getSession(credentials?.email, credentials?.password)
+          return extractUserFromSession(response)
+        } catch (error) {
+          console.error(error);
+          return null
+        }
+      }
+    }) as any,
+  ],
+  /**
+   * Since we are using custom implementation; we have defined URLs for the login and error pages
+   */
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/login",
+  },
+  callbacks: {
+    /**
+     * This callback is called whenever a JWT is created or updated. 
+     * For the first time login we are creating a token from the user object returned by the authorize callback.
+     * For subsequent requests we are refreshing the access token and creating a new token from the user object. If the refresh token has expired
+     *
+     */
+    async jwt({ token, user, account }: any) {
+      // Initial sign in; we have plugged tokens and expiry date into the user object in the authorize callback; object
+      // returned here will be saved in the JWT and will be available in the session callback as well as this callback
+      // on next requests
+      if (account && user) {
+        return createTokenFromUser(user);
+      }
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < token?.accessTokenExpires) {
+        return token;
+      }
+      try {
+        const newUserSession = await refreshAccessToken({
+          refreshToken: token?.refreshToken,
+        })
+        const user = extractUserFromSession(newUserSession);
+        return createTokenFromUser(user);
+      } catch(error) {
+        console.error(error);
+        throw new Error('Invalid session');
+      }
+    },
+    /**
+     * The session callback is called whenever a session is checked. By default, only a subset of the token is
+     * returned for increased security. We are sending properties required for the client side to work.
+     * 
+     * @param session - Session object
+     * @param token - Decrypted JWT that we returned in the jwt callback
+     * @returns - Promise with the result of the session
+     */
+    async session({ session, token }: any) {
+      session.user = token.user
+      session.accessToken = token.accessToken
+      session.error = token.error
+      return session;
+    },
+  },
+});
+```
+
+In the above code, we have defined the `handle` function that SvelteKit will use to handle the authentication. We used the SvelteKitAuth function from the SvelteKit Auth module to create the `handle` function. We also used `Credentials` from the SvelteKit Auth module to create the credentials provider.
+
+The `Credentials` function takes an object as an argument. The object has the following properties:
+
+- `type`: Type of the provider. In our case, it is `credentials`
+- `id`: ID of the provider. In our case, it is `credentials`
+- `name`: Name of the provider. In our case, it is `Cognito`
+- `credentials`: Object containing the credentials. In our case, it is `email` and `password`
+- `authorize`: The function will be called when the user tries to log in. In our case, we call the `getSession` function that we created earlier and return the user object from the session data
+
+In the `pages` property, we have defined the URLs for the login and error pages. SvelteKit Auth will redirect the user to the login page if not authenticated. Because we have kept the same URLs for error and sign-in, we will receive the error message on the login page in query params.
+
+In `callbacks`, we have implemented the `jwt` and `session` methods. The `jwt` method will be called whenever a JWT is created from the `authorize` method we have defined. The `session` method is called whenever a session is checked.
+
+## Creating the root layout
+
+SevelteKit Authを設定したので、すべてのページで使用するルートレイアウトを作成する必要があります。
+
+Create a `src/routes/+layout.svelte` file and add the following code:
+
+```
+<script lang="ts">
+  import { signOut } from "@auth/sveltekit/client"
+  import { page } from "$app/stores"
+</script>
+<div>
+  <header>
+    {#if $page.data.session}
+      <div>
+        <strong>Hello {$page.data.session.user?.name}</strong>
+        <button on:click|preventDefault={signOut} class="button">Sign out</button>
+      </div>
+    {:else}
+      <a href="/auth/login" class="buttonPrimary">Sign in</a>
+    {/if}
+  </header>
+  <slot />
+</div>
+```
+
+SvelteKit Authでは、ユーザが認証されると同時にページデータにセッションオブジェクトを設定します。このセッションデータを使って、ユーザが認証されているかどうかを確認することができます。
+
+この例では、ユーザーが認証された場合、ユーザー名とサインアウトボタンを表示します。ユーザが認証されていない場合は、サインインボタンを表示します。ここでは、SvelteKit AuthモジュールのsignOut関数を直接使用しています。この関数はユーザーをサインアウトし、ログインページにリダイレクトします。
+
+## ユーザーをログインページにリダイレクトする
+
+ルート・レイアウトができたので、ログイン・ページを作成しましょう。`src/routes/auth/login/+page.svelte`ファイルを作成し、以下のコードを追加します：
+
+```
+<script lang="ts">
+  import { signIn } from "@auth/sveltekit/client"
+  import { invalidateAll } from '$app/navigation';
+  const handleSubmit = async (event: any) => {
+    const data = new FormData(event.target);
+    try {
+      await signIn('credentials', {
+        email: data.get('email'),
+        password: data.get('password')
+      });
+    } catch (error) {
+      await invalidateAll();
+    }
+  }
+</script>
+<h1>Login</h1>
+<div>
+  <form name="login" method="POST" on:submit|preventDefault={handleSubmit}>
+    <input name="email" type="email" placeholder="Email Address" />
+    <input name="password" placeholder="Password" type="password" />
+    <button>Sign In</button>
+  </form>
+</div>
+```
+
+上記のコードでは、SvelteKit AuthモジュールのsignIn関数を使用してサインインしています。これはCredentialsで定義したauthorizeを呼び出します。ユーザーの認証に成功すると、jwtコールバックが呼び出され、hooks.server.tsのsessionコールバックから返されたセッションデータでホームページにリダイレクトされます。
+
+## セッションとリダイレクト
+
+ルートレイアウトで説明したように、SvelteKit Authはページストアにセッションデータを設定します。このデータにはサブレイアウトでアクセスできます。認証されたルートが認証されていないユーザーからアクセスできないようにするため、認証されたルートをすべて`src/lib/routes/(auth)`ディレクトリの下に配置します。ここでは、[advanced layout technique of SvelteKit](https://kit.svelte.dev/docs/advanced-routing#advanced-layouts).を活用しています。
+
+では、そのディレクトリに`+layout.server.ts`ファイルを作成しましょう：
+
+```
+import { redirect } from '@sveltejs/kit';
+import type { LayoutServerLoad } from './$types';
+import { getAccount } from '$lib/domains/auth/api/getAccount';
+export const load: LayoutServerLoad = async ({ locals }) => {
+  // Get the session from the locals
+  const session = (await locals.getSession()) as any;
+  // If the user is not authenticated, redirect to the login page 
+  if (!session?.user?.id || !session?.accessToken) {
+    throw redirect(307, '/auth/login');
+  }
+  // Get the account details at the root layout level so that we can use it in the sub layouts
+  const account = await getAccount(session?.user?.id, session?.accessToken);
+  // If the account is not found, redirect to the login page
+  if (!account) {
+    throw redirect(307, '/auth/login');
+  }
+  // On success, we can send the session and account data to the sub layouts
+  return {
+    session,
+    account,
+  };
+};
+```
+
+これで、セッション内のすべてのデータ、つまり必要なトークンやユーザーアカウントの詳細が、サーバー側とクライアント側の両方で利用できるようになり、バックエンドへの認証済みリクエストやその他の目的に、それらを使うことができるようになった。
+
+## 結論
+
+Auth.js is a useful library for the implementation of authentication for most popular web frameworks today. It has made it quite easy to implement redirection-based logins and, on top of that, it provides great flexibility and allows us to implement our own authentication logic as per requirement.
+
+What we have seen in this article is just a small part of what [Auth.js](https://authjs.dev/) can do. I highly recommend you check out the [guide to getting started with Auth.js](https://authjs.dev/getting-started/introduction) to learn more.
+
+Auth.jsは、現在人気のあるほとんどのウェブフレームワークで認証を実装するための便利なライブラリです。Auth.jsは、リダイレクトベースのログインを非常に簡単に実装することができ、その上、非常に柔軟性があり、要件に応じて独自の認証ロジックを実装することができます。
+
+この記事で紹介したのは、 [Auth.js](https://authjs.dev/) でできることのほんの一部です。もっと詳しく知りたい方は、 [guide to getting started with Auth.js](https://authjs.dev/getting-started/introduction) をチェックすることを強くお勧めします。
