@@ -1,16 +1,16 @@
-## SvelteKitアプリの構築
+## SvelteKit アプリの構築
 
-新しいSvelteKitプロジェクトを作成し、AWS Cognito認証を追加してみましょう。カスタム認証情報を使用してAWS Cognito認証を追加し、内部レイアウトまでサーバ側とクライアント側の両方で認証トークンとセッションデータを取得します。
+新しい SvelteKit プロジェクトを作成し、AWS Cognito 認証を追加してみましょう。カスタム認証情報を使用して AWS Cognito 認証を追加し、内部レイアウトまでサーバ側とクライアント側の両方で認証トークンとセッションデータを取得します。
 
-まず、TypeScriptを使用して公式ガイドを使用して新しいSvelteKitプロジェクトをscaffoldしてみましょう：
+まず、TypeScript を使用して公式ガイドを使用して新しい SvelteKit プロジェクトを scaffold してみましょう：
 
 ```
 npm create svelte@latest skauth-congito-demo
 ```
 
-これでベアメタルのSvelteKitが手に入る。
+これでベアメタルの SvelteKit が手に入る。
 
-次に、最新バージョンのSvelteKit Authをプロジェクトに追加します：
+次に、最新バージョンの SvelteKit Auth をプロジェクトに追加します：
 
 ```
 npm install @auth/sveltekit@latest @auth/core@latest
@@ -18,15 +18,15 @@ npm install @auth/sveltekit@latest @auth/core@latest
 
 ## AWS Cognito setup
 
-認証にはAWS Cognitoを使用します。新しい AWS Cognito ユーザープールとアプリクライアントをセットアップする必要があります。AWS Cognitoユーザープールのセットアップは、こちらの公式ガイドを参考にしてください。`COGNITO_USER_POOL_ID`と`COGNITO_CLIENT_ID`を取得したら、実装を進めます。
+認証には AWS Cognito を使用します。新しい AWS Cognito ユーザープールとアプリクライアントをセットアップする必要があります。AWS Cognito ユーザープールのセットアップは、こちらの公式ガイドを参考にしてください。`COGNITO_USER_POOL_ID`と`COGNITO_CLIENT_ID`を取得したら、実装を進めます。
 
-AWS Cognitoユーザープールとアプリクライアントの準備ができたので、SvelteKitプロジェクトにカスタム認証認証を追加します。まず、AWS Cognito SDKをプロジェクトに追加します：
+AWS Cognito ユーザープールとアプリクライアントの準備ができたので、SvelteKit プロジェクトにカスタム認証認証を追加します。まず、AWS Cognito SDK をプロジェクトに追加します：
 
 ```
 pnpm install amazon-cognito-identity-js
 ```
 
-プロジェクトに以下の環境変数を追加します。これらの環境変数を使用して、ユーザー・プールIDとアプリ・クライアントIDを取得する：
+プロジェクトに以下の環境変数を追加します。これらの環境変数を使用して、ユーザー・プール ID とアプリ・クライアント ID を取得する：
 
 ```
 # .env
@@ -34,9 +34,9 @@ COGNITO_USER_POOL_ID=ap-northeast-1_c570OAYMi
 COGNITO_CLIENT_ID=59ar0hvmekf7u9vit16ou73mj3
 ```
 
-## AWS Cognitoの実装
+## AWS Cognito の実装
 
-domain driven architectureで作業するため、すべての認証関連モジュールを`src/lib/domain/auth`ディレクトリに置いておく。
+domain driven architecture で作業するため、すべての認証関連モジュールを`src/lib/domain/auth`ディレクトリに置いておく。
 
 新しいファイル`src/lib/domain/auth/services/Cognito.ts`を作成し、以下のコードを追加します：
 
@@ -97,11 +97,11 @@ export const refreshAccessToken = async (sessionData: { refreshToken: string }):
 };
 ```
 
-このファイルは、AWS Cognitoユーザープールにログインし、アクセストークンをリフレッシュするために必要なすべてのメソッドを実装しています。このファイルは SvelteKit Auth モジュールで使用します。
+このファイルは、AWS Cognito ユーザープールにログインし、アクセストークンをリフレッシュするために必要なすべてのメソッドを実装しています。このファイルは SvelteKit Auth モジュールで使用します。
 
 ## カスタム認証情報の追加
 
-SvelteKit Authは、SvelteKitが提供するサーバーサイドフックを利用して認証機能を実装します。今回のアプリでは、`src/hooks.server.ts`をカスタマイズして作成します。
+SvelteKit Auth は、SvelteKit が提供するサーバーサイドフックを利用して認証機能を実装します。今回のアプリでは、`src/hooks.server.ts`をカスタマイズして作成します。
 
 こんな感じになります。少し複雑に見えるかもしれませんが、各ステップを詳しく説明していきます：
 
@@ -193,7 +193,7 @@ export const handle = SvelteKitAuth({
   },
   callbacks: {
     /**
-     * This callback is called whenever a JWT is created or updated. 
+     * This callback is called whenever a JWT is created or updated.
      * For the first time login we are creating a token from the user object returned by the authorize callback.
      * For subsequent requests we are refreshing the access token and creating a new token from the user object. If the refresh token has expired
      *
@@ -223,7 +223,7 @@ export const handle = SvelteKitAuth({
     /**
      * The session callback is called whenever a session is checked. By default, only a subset of the token is
      * returned for increased security. We are sending properties required for the client side to work.
-     * 
+     *
      * @param session - Session object
      * @param token - Decrypted JWT that we returned in the jwt callback
      * @returns - Promise with the result of the session
@@ -254,7 +254,7 @@ In `callbacks`, we have implemented the `jwt` and `session` methods. The `jwt` m
 
 ## Creating the root layout
 
-SevelteKit Authを設定したので、すべてのページで使用するルートレイアウトを作成する必要があります。
+SevelteKit Auth を設定したので、すべてのページで使用するルートレイアウトを作成する必要があります。
 
 Create a `src/routes/+layout.svelte` file and add the following code:
 
@@ -278,9 +278,9 @@ Create a `src/routes/+layout.svelte` file and add the following code:
 </div>
 ```
 
-SvelteKit Authでは、ユーザが認証されると同時にページデータにセッションオブジェクトを設定します。このセッションデータを使って、ユーザが認証されているかどうかを確認することができます。
+SvelteKit Auth では、ユーザが認証されると同時にページデータにセッションオブジェクトを設定します。このセッションデータを使って、ユーザが認証されているかどうかを確認することができます。
 
-この例では、ユーザーが認証された場合、ユーザー名とサインアウトボタンを表示します。ユーザが認証されていない場合は、サインインボタンを表示します。ここでは、SvelteKit AuthモジュールのsignOut関数を直接使用しています。この関数はユーザーをサインアウトし、ログインページにリダイレクトします。
+この例では、ユーザーが認証された場合、ユーザー名とサインアウトボタンを表示します。ユーザが認証されていない場合は、サインインボタンを表示します。ここでは、SvelteKit Auth モジュールの signOut 関数を直接使用しています。この関数はユーザーをサインアウトし、ログインページにリダイレクトします。
 
 ## ユーザーをログインページにリダイレクトする
 
@@ -312,11 +312,11 @@ SvelteKit Authでは、ユーザが認証されると同時にページデータ
 </div>
 ```
 
-上記のコードでは、SvelteKit AuthモジュールのsignIn関数を使用してサインインしています。これはCredentialsで定義したauthorizeを呼び出します。ユーザーの認証に成功すると、jwtコールバックが呼び出され、hooks.server.tsのsessionコールバックから返されたセッションデータでホームページにリダイレクトされます。
+上記のコードでは、SvelteKit Auth モジュールの signIn 関数を使用してサインインしています。これは Credentials で定義した authorize を呼び出します。ユーザーの認証に成功すると、jwt コールバックが呼び出され、hooks.server.ts の session コールバックから返されたセッションデータでホームページにリダイレクトされます。
 
 ## セッションとリダイレクト
 
-ルートレイアウトで説明したように、SvelteKit Authはページストアにセッションデータを設定します。このデータにはサブレイアウトでアクセスできます。認証されたルートが認証されていないユーザーからアクセスできないようにするため、認証されたルートをすべて`src/lib/routes/(auth)`ディレクトリの下に配置します。ここでは、[advanced layout technique of SvelteKit](https://kit.svelte.dev/docs/advanced-routing#advanced-layouts).を活用しています。
+ルートレイアウトで説明したように、SvelteKit Auth はページストアにセッションデータを設定します。このデータにはサブレイアウトでアクセスできます。認証されたルートが認証されていないユーザーからアクセスできないようにするため、認証されたルートをすべて`src/lib/routes/(auth)`ディレクトリの下に配置します。ここでは、[advanced layout technique of SvelteKit](https://kit.svelte.dev/docs/advanced-routing#advanced-layouts).を活用しています。
 
 では、そのディレクトリに`+layout.server.ts`ファイルを作成しましょう：
 
@@ -327,7 +327,7 @@ import { getAccount } from '$lib/domains/auth/api/getAccount';
 export const load: LayoutServerLoad = async ({ locals }) => {
   // Get the session from the locals
   const session = (await locals.getSession()) as any;
-  // If the user is not authenticated, redirect to the login page 
+  // If the user is not authenticated, redirect to the login page
   if (!session?.user?.id || !session?.accessToken) {
     throw redirect(307, '/auth/login');
   }
@@ -353,6 +353,6 @@ Auth.js is a useful library for the implementation of authentication for most po
 
 What we have seen in this article is just a small part of what [Auth.js](https://authjs.dev/) can do. I highly recommend you check out the [guide to getting started with Auth.js](https://authjs.dev/getting-started/introduction) to learn more.
 
-Auth.jsは、現在人気のあるほとんどのウェブフレームワークで認証を実装するための便利なライブラリです。Auth.jsは、リダイレクトベースのログインを非常に簡単に実装することができ、その上、非常に柔軟性があり、要件に応じて独自の認証ロジックを実装することができます。
+Auth.js は、現在人気のあるほとんどのウェブフレームワークで認証を実装するための便利なライブラリです。Auth.js は、リダイレクトベースのログインを非常に簡単に実装することができ、その上、非常に柔軟性があり、要件に応じて独自の認証ロジックを実装することができます。
 
 この記事で紹介したのは、 [Auth.js](https://authjs.dev/) でできることのほんの一部です。もっと詳しく知りたい方は、 [guide to getting started with Auth.js](https://authjs.dev/getting-started/introduction) をチェックすることを強くお勧めします。
