@@ -3,7 +3,6 @@
 <!--
 title:   GDALでCSVファイルをGeoPackageファイルに変換する
 tags:    GIS,GDAL,python
-id:
 private: true
 -->
 
