@@ -5,19 +5,18 @@ id:      9812fb86a379cd5301a5
 private: true
 -->
 
-
 # はじめに
 
-以下の流れで GDAL を使用し、CSV ファイルを GeoPackage ファイルに変換するテクニックを身につけたため、備忘録として残します。
+以下の流れで GDAL を使用し、CSV ファイルを GeoPackage ファイルに変換するテクニックを知ったので、備忘録として残しておきます。
 
 経緯
 
 1. ogr2ogr コマンドで CSV ファイルを GeoPackage ファイルに変換
-1. 変換されたが、属性情報が全て文字列型となった
-1. VRT ファイルを用いて属性情報の型を指定して変換する手法を試す
-1. 変換成功。ただし、属性情報を VRT ファイルに直接記述するのは手間がかかる
-1. 属性情報の型を Python の pandas で取得し、VRT ファイルに書き込む方法を採用
-1. CSV ファイルを GeoPackage ファイルにうまく変換できるようになった
+2. 変換されたが、属性情報が全て文字列型となった
+3. VRT ファイルを用いて属性情報の型を指定して変換する手法を試す
+4. 変換成功。ただし、属性情報を VRT ファイルに直接記述するのは手間がかかる
+5. 属性情報の型を Python の pandas で取得し、VRT ファイルに書き込む方法を採用
+6. CSV ファイルを GeoPackage ファイルにうまく変換できるようになった
 
 # 実行手順
 
@@ -31,7 +30,7 @@ private: true
 ## 2. データの準備
 
 以下のサイトからデータ「ケース 01\_堤防破堤」をダウンロードして、解凍します。
-<https://www.geospatial.jp/ckan/dataset/dataset>
+[https://www.geospatial.jp/ckan/dataset/dataset](https://www.geospatial.jp/ckan/dataset/dataset)
 
 ## 3. CSV ファイルを GeoPackage ファイルに変換
 
