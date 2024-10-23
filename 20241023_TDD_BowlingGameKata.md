@@ -1,5 +1,5 @@
 <!--
-title:   TDD道場： Bowling Game KataをPythonで実装する
+title:   TDD道場 - Bowling Game KataをPythonで実装する
 tags:    Python, TDD, pytest
 private: true
 -->
