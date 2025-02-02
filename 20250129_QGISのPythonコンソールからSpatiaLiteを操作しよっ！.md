@@ -1,8 +1,10 @@
 <!--
 title:   QGISのPythonコンソールからSpatiaLiteを操作しよっ！
-tags:    GIS,QGIS,SQlite,SpatiaLite
+tags:    GIS,QGIS,SQLite,SpatiaLite
+id:      c6ae216bcb9a447c6354
 private: true
 -->
+
 
 # はじめに
 
