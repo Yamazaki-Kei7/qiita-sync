@@ -5,7 +5,6 @@ id:      c6ae216bcb9a447c6354
 private: true
 -->
 
-
 # はじめに
 
 個人的な作業メモです。
@@ -48,7 +47,7 @@ Mac では、今のところ、Spatialite 拡張ライブラリが標準でイ�
 [Installing and loading spatialite on MacOS](https://medium.com/@carusot42/installing-and-loading-spatialite-on-macos-28bf677f0436)の記事を参考に、インストールしてみてください。
 :::
 
-## テーブルの作成
+## 新規テーブルの作成
 
 SpatiaLite の `AddGeometryColumn`関数を使って、ジオメトリカラムを追加します。
 これにより、対象のテーブルにジオメトリカラムを追加することができます。
